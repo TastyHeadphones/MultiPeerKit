@@ -8,8 +8,8 @@
 import MultipeerConnectivity
 import Combine
 
-final class PeersStore {
-    @Published var peers: [Peer] = []
+public final class PeersStore {
+    @Published public var peers: [Peer] = []
     var sendTrackingMap: [String: MCPeerID] = [:] // This is used to keep track of the send data uuid to specific peer
 
     func addPeer(_ peer: Peer) {

@@ -17,9 +17,9 @@ public final class MultipeerManager: NSObject {
 
     private let browser: MCNearbyServiceBrowser
     private let advertiser: MCNearbyServiceAdvertiser
-    private let store = PeersStore()
+    public let store = PeersStore()
 
-    init(peer: Peer, serviceType: String) {
+    public init(peer: Peer, serviceType: String) {
         localPeerID = peer.mcPeerID
         session = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .required)
         sender = MultipeerSender(session: session)
