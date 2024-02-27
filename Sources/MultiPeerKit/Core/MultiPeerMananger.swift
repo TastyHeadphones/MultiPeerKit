@@ -48,8 +48,8 @@ extension MultipeerManager {
         advertiser.stopAdvertisingPeer()
     }
 
-    public func send(_ data: TraceableData, to peers: [Peer]) throws -> String {
-        try sender.send(data: data.dataValue, to: peers.map { $0.mcPeerID })
+    public func send(_ data: Data, to peers: [Peer]) throws -> String {
+        try sender.send(data: data, to: peers.map { $0.mcPeerID })
     }
 
     public func acceptData(from uuid: String) throws {

@@ -20,7 +20,8 @@ class MultipeerSender {
     func send(data: Data, to peers: [MCPeerID]) throws -> String {
         let uuidString = UUID().uuidString
         let sendRecord = DataSendRecord(uuid: uuidString, state: .pending)
-        try session.send(data, toPeers: peers, with: .reliable)
+        let traceableData = TraceableData(data: data)
+        try session.send(traceableData.dataValue, toPeers: peers, with: .reliable)
         return uuidString
     }
 }
