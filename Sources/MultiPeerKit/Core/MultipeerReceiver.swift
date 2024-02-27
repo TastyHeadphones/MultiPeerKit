@@ -9,7 +9,7 @@ import MultipeerConnectivity
 import Combine
 
 class MultipeerReceiver {
-    let dataPublisher = PassthroughSubject<Data, Never>()
+    let dataPublisher = PassthroughSubject<TraceableData, Never>()
 
     private let session: MCSession
 
@@ -19,7 +19,11 @@ class MultipeerReceiver {
 }
 
 extension MultipeerReceiver {
-    func receive(_ data: Data) {
+    func receive(_ data: TraceableData) {
         dataPublisher.send(data)
+    }
+
+    func  response(with record: DataSendRecord, to peer: MCPeerID) throws {
+        try session.send(record.dataValue, toPeers: [peer], with: .reliable)
     }
 }

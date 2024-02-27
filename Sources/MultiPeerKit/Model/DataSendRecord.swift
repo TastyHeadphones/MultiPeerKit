@@ -19,4 +19,8 @@ struct DataSendRecord: Hashable, Codable {
     mutating func updateState(_ state: DataSendState) {
         self.state = state
     }
+
+    var dataValue: Data {
+        try! JSONEncoder().encode(self)
+    }
 }

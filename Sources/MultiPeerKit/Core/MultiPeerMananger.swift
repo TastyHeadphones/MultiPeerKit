@@ -48,8 +48,22 @@ extension MultipeerManager {
         advertiser.stopAdvertisingPeer()
     }
 
-    public func send(_ data: Data, to peers: [Peer]) throws {
-        try sender.send(data: data, to: peers.map { $0.mcPeerID })
+    public func send(_ data: TraceableData, to peers: [Peer]) throws -> String {
+        try sender.send(data: data.dataValue, to: peers.map { $0.mcPeerID })
+    }
+
+    public func acceptData(from uuid: String) throws {
+        guard let mcPeerID = store.sendTrackingMap[uuid] else {
+            throw PeerError.noPeerTrackError
+        }
+        try receiver.response(with: DataSendRecord(uuid: uuid, state: .accept), to: mcPeerID)
+    }
+
+    public func decline(from uuid: String) throws {
+        guard let mcPeerID = store.sendTrackingMap[uuid] else {
+            throw PeerError.noPeerTrackError
+        }
+        try receiver.response(with: DataSendRecord(uuid: uuid, state: .decline), to: mcPeerID)
     }
 }
 
@@ -61,7 +75,7 @@ extension MultipeerManager: MCSessionDelegate {
             sender.updateSendRecord(record)
             return
         }
-        receiver.receive(data)
+        receiver.receive(data.traceableValue!)
     }
 
     public func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
