@@ -19,7 +19,7 @@ struct UserView: View {
                 .frame(width: 10, height: 10)
             Text(user.name)
             Button(action: {
-                //                try! ExploreViewModel.mananger.send(Data(capacity: 10), to: [ExploreViewModel.mananger.store.peer(for: user.name)!])
+                try? MultipeerManagerHelper.sharedManager.send("Hello".data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!])
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
@@ -32,6 +32,8 @@ struct UserView: View {
 @Observable class ExploreViewModel {
     private var cancellables = Set<AnyCancellable>()
 
+    var showAlert = false
+
     var users: [User] = []
 
     init() {
@@ -41,11 +43,16 @@ struct UserView: View {
             self?.users = peers.compactMap(\.info?.user)
         }
         .store(in: &cancellables)
+        MultipeerManagerHelper.sharedManager.dataPublisher.sink { data in
+            print(data)
+            self.showAlert = true
+        }
+        .store(in: &cancellables)
     }
 }
 
 struct ExploreView: View {
-    var viewModel = ExploreViewModel()
+    @State var viewModel = ExploreViewModel()
 
     var body: some View {
         VStack{
@@ -53,6 +60,9 @@ struct ExploreView: View {
             List(viewModel.users) { user in
                 UserView(user: user)
             }
+        }
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("Receive"), message: Text("Receive"), dismissButton: .default(Text("OK")))
         }
     }
 }

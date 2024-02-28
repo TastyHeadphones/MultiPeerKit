@@ -19,13 +19,16 @@ public final class MultipeerManager: NSObject {
     private let advertiser: MCNearbyServiceAdvertiser
     public let store = PeersStore()
 
+    public let dataPublisher: AnyPublisher<TraceableData, Never>
+
     public init(peer: Peer, serviceType: String) {
         localPeerID = peer.mcPeerID
-        session = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .required)
-        sender = MultipeerSender(session: session)
+        session = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .none)
+        sender = MultipeerSender(session: session, header: peer.info)
         receiver = MultipeerReceiver(session: session)
         browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: serviceType)
         advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
+        dataPublisher = receiver.dataPublisher.eraseToAnyPublisher()
         super.init()
         setupDelegate()
     }
@@ -68,8 +71,6 @@ extension MultipeerManager {
 }
 
 extension MultipeerManager: MCSessionDelegate {
-    public func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {}
-
     public func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         if let record = ReceiveDataProcessor.getResponse(data: data) {
             sender.updateSendRecord(record)
@@ -77,6 +78,8 @@ extension MultipeerManager: MCSessionDelegate {
         }
         receiver.receive(data.traceableValue!)
     }
+
+    public func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {}
 
     public func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
 
@@ -88,7 +91,7 @@ extension MultipeerManager: MCSessionDelegate {
 extension MultipeerManager: MCNearbyServiceBrowserDelegate {
     public func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
-        let peer = Peer(id: peerID.displayName, info: info)
+        let peer = Peer(mcPeerID: peerID, info: info)
         store.addPeer(peer)
     }
 

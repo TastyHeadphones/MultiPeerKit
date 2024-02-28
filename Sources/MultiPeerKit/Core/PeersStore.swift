@@ -20,7 +20,7 @@ public final class PeersStore {
         peers.removeAll { $0.id == id }
     }
 
-    func peer(for id: String) -> Peer? {
+    public func peer(for id: String) -> Peer? {
         return peers.first { $0.id == id }
     }
 }

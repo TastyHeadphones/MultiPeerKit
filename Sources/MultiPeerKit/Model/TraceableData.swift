@@ -8,6 +8,7 @@
 import Foundation
 
 public struct TraceableData: Sendable, Codable {
+    let header: [String: String]? // Peer advertisement info
     let data: Data
     let uuid: String
 
