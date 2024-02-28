@@ -13,6 +13,8 @@
 		126531D12B8834D700500D9A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 126531D02B8834D700500D9A /* Preview Assets.xcassets */; };
 		126531D92B8834F500500D9A /* MultiPeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 126531D82B8834F500500D9A /* MultiPeerKit */; };
 		12CEF5462B8DE14500E3706C /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CEF5452B8DE14500E3706C /* ExploreView.swift */; };
+		12CEF5522B8ED10A00E3706C /* MultipeerManagerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CEF5512B8ED10A00E3706C /* MultipeerManagerHelper.swift */; };
+		12CEF5542B8ED15600E3706C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CEF5532B8ED15600E3706C /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		126531CD2B8834D700500D9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		126531D02B8834D700500D9A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		12CEF5452B8DE14500E3706C /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		12CEF5512B8ED10A00E3706C /* MultipeerManagerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerManagerHelper.swift; sourceTree = "<group>"; };
+		12CEF5532B8ED15600E3706C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +59,7 @@
 		126531C82B8834D600500D9A /* MultiPeerKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				12CEF5452B8DE14500E3706C /* ExploreView.swift */,
+				12CEF54D2B8ED0B700E3706C /* Explore */,
 				126531C92B8834D600500D9A /* MultiPeerKitDemoApp.swift */,
 				126531CB2B8834D600500D9A /* ContentView.swift */,
 				126531CD2B8834D700500D9A /* Assets.xcassets */,
@@ -70,6 +74,40 @@
 				126531D02B8834D700500D9A /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		12CEF54D2B8ED0B700E3706C /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				12CEF5502B8ED0FB00E3706C /* Utils */,
+				12CEF54F2B8ED0D100E3706C /* Model */,
+				12CEF54E2B8ED0CD00E3706C /* View */,
+				12CEF5452B8DE14500E3706C /* ExploreView.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		12CEF54E2B8ED0CD00E3706C /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		12CEF54F2B8ED0D100E3706C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				12CEF5532B8ED15600E3706C /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		12CEF5502B8ED0FB00E3706C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				12CEF5512B8ED10A00E3706C /* MultipeerManagerHelper.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,7 +187,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				126531CC2B8834D600500D9A /* ContentView.swift in Sources */,
+				12CEF5522B8ED10A00E3706C /* MultipeerManagerHelper.swift in Sources */,
 				126531CA2B8834D600500D9A /* MultiPeerKitDemoApp.swift in Sources */,
+				12CEF5542B8ED15600E3706C /* User.swift in Sources */,
 				12CEF5462B8DE14500E3706C /* ExploreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
