@@ -10,20 +10,42 @@ import MultiPeerKit
 import Combine
 
 struct UserView: View {
+    @State var prsentTextFiled = false
+    @State var sendMessage: String = ""
+
     let user: User
 
     var body: some View {
         HStack {
             Image(systemName: "person")
                 .resizable()
-                .frame(width: 10, height: 10)
+                .frame(width: 20, height: 20)
             Text(user.name)
+            Spacer()
             Button(action: {
-                try? MultipeerManagerHelper.sharedManager.send("Hello".data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!])
+                prsentTextFiled = true
             }) {
                 Image(systemName: "arrow.right.circle")
                     .resizable()
-                    .frame(width: 10, height: 10)
+                    .frame(width: 20, height: 20)
+            }
+        }
+        .sheet(isPresented: $prsentTextFiled) {
+            VStack {
+                Text("\(User.current.name)")
+                    .font(.title)
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                TextField("Send Message", text: $sendMessage)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
+                Button(action: {
+                    try? MultipeerManagerHelper.sharedManager.send(sendMessage.data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!])
+                    prsentTextFiled = false
+                }) {
+                    Image(systemName: "paperplane")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
             }
         }
     }
