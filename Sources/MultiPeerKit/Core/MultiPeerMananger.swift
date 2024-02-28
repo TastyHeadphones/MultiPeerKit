@@ -20,6 +20,7 @@ public final class MultipeerManager: NSObject {
     public let store = PeersStore()
 
     public let dataPublisher: AnyPublisher<TraceableData, Never>
+    public let sendRecordPublisher: AnyPublisher<DataSendRecord, Never>
 
     public init(peer: Peer, serviceType: String) {
         localPeerID = peer.mcPeerID
@@ -29,6 +30,7 @@ public final class MultipeerManager: NSObject {
         browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: serviceType)
         advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
         dataPublisher = receiver.dataPublisher.eraseToAnyPublisher()
+        sendRecordPublisher = sender.recordPublisher.eraseToAnyPublisher()
         super.init()
         setupDelegate()
     }
@@ -56,14 +58,14 @@ extension MultipeerManager {
     }
 
     public func acceptData(from uuid: String) throws {
-        guard let mcPeerID = store.sendTrackingMap[uuid] else {
+        guard let mcPeerID = receiver.idPeerMap[uuid] else {
             throw PeerError.noPeerTrackError
         }
         try receiver.response(with: DataSendRecord(uuid: uuid, state: .accept), to: mcPeerID)
     }
 
-    public func decline(from uuid: String) throws {
-        guard let mcPeerID = store.sendTrackingMap[uuid] else {
+    public func declineData(from uuid: String) throws {
+        guard let mcPeerID = receiver.idPeerMap[uuid] else {
             throw PeerError.noPeerTrackError
         }
         try receiver.response(with: DataSendRecord(uuid: uuid, state: .decline), to: mcPeerID)
@@ -76,7 +78,7 @@ extension MultipeerManager: MCSessionDelegate {
             sender.updateSendRecord(record)
             return
         }
-        receiver.receive(data.traceableValue!)
+        receiver.receive(data.traceableValue!, from: peerID)
     }
 
     public func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {}
