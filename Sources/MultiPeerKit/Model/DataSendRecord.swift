@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct DataSendRecord: Hashable, Codable {
-    let uuid: String
-    var state: DataSendState
+public struct DataSendRecord: Hashable, Codable {
+    public let uuid: String
+    public var state: DataSendState
 
-    init(uuid: String = UUID().uuidString, state: DataSendState) {
+    public init(uuid: String = UUID().uuidString, state: DataSendState) {
         self.uuid = uuid
         self.state = state
     }

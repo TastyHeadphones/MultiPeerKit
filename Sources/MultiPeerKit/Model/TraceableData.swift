@@ -8,16 +8,16 @@
 import Foundation
 
 public struct TraceableData: Sendable, Codable {
-    let header: [String: String]? // Peer advertisement info
-    let data: Data
-    let uuid: String
+    public let header: [String: String]? // Peer advertisement info
+    public let data: Data
+    public let uuid: String
 
-    var dataValue: Data {
+    public var dataValue: Data {
         try! JSONEncoder().encode(self)
     }
 }
 
-extension Data {
+public extension Data {
     var traceableValue: TraceableData? {
         try? JSONDecoder().decode(TraceableData.self, from: self)
     }
