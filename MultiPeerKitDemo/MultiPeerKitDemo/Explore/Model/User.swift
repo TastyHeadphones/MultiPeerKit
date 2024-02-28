@@ -5,14 +5,17 @@
 //  Created by Young Geo on 2/28/24.
 //
 
+import MultiPeerKit
 import UIKit
 
-struct User: Codable, Identifiable {
+struct User: Codable, Identifiable, Hashable {
     var id: String { deviceId }
 
     let deviceId: String
     let name: String
     let activator: String
+
+    var state: DataSendState?
 
     static let current = User(deviceId: UIDevice.current.identifierForVendor!.uuidString,
                               name: generateRandomString(length: 7),
