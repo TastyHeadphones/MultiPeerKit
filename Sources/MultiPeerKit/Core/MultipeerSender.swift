@@ -24,8 +24,10 @@ class MultipeerSender {
         let uuidString = UUID().uuidString
         let traceableData = TraceableData(header: header, data: data, uuid: uuidString)
         try session.send(traceableData.dataValue, toPeers: peers, with: .reliable)
-        let record = DataSendRecord(uuid: uuidString, state: .pending)
-        updateSendRecord(record)
+        Task {
+            let record = DataSendRecord(uuid: uuidString, state: .pending)
+            updateSendRecord(record)
+        }
         return uuidString
     }
 }
