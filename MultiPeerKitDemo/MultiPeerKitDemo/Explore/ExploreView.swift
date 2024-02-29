@@ -83,6 +83,8 @@ struct UserView: View {
 
     var showAlert = false
 
+    var showContent = false
+
     var receivedData: TraceableData?
 
     var users: [User] = []
@@ -133,6 +135,7 @@ struct ExploreView: View {
                   primaryButton: .default(Text("Accept"),
                                           action: {
                 viewModel.showAlert = false
+                viewModel.showContent = true
                 try? MultipeerManagerHelper.sharedManager.acceptData(from: viewModel.receivedData!.uuid)
             }),
                   secondaryButton: .cancel {
@@ -140,5 +143,15 @@ struct ExploreView: View {
                 try? MultipeerManagerHelper.sharedManager.declineData(from: viewModel.receivedData!.uuid)
             })
         }
+        .sheet(isPresented: $viewModel.showContent, content: {
+            VStack {
+                Text(viewModel.receivedData!.uuid)
+                    .font(.title)
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                Text(String(data: viewModel.receivedData!.data, encoding: .utf8)!)
+                    .font(.title)
+                    .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+            }
+        })
     }
 }
