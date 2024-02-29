@@ -9,6 +9,7 @@ import MultipeerConnectivity
 import Combine
 
 public final class MultipeerManager: NSObject {
+    private let serviceType: String
     private let localPeerID: MCPeerID
     private let session: MCSession
 
@@ -16,13 +17,14 @@ public final class MultipeerManager: NSObject {
     private let receiver: MultipeerReceiver
 
     private let browser: MCNearbyServiceBrowser
-    private let advertiser: MCNearbyServiceAdvertiser
+    private var advertiser: MCNearbyServiceAdvertiser
     public let store = PeersStore()
 
     public let dataPublisher: AnyPublisher<TraceableData, Never>
     public let sendRecordPublisher: AnyPublisher<DataSendRecord, Never>
 
     public init(peer: Peer, serviceType: String) {
+        self.serviceType = serviceType
         localPeerID = peer.mcPeerID
         session = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .none)
         sender = MultipeerSender(session: session, header: peer.info)
@@ -43,6 +45,12 @@ public final class MultipeerManager: NSObject {
 }
 
 extension MultipeerManager {
+    public func updateAdvertiser(_ peer: Peer) {
+        advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
+        advertiser.delegate = self
+        advertiser.startAdvertisingPeer()
+    }
+
     public func beginConnection() {
         browser.startBrowsingForPeers()
         advertiser.startAdvertisingPeer()
