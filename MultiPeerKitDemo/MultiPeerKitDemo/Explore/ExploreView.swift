@@ -93,12 +93,16 @@ struct UserView: View {
             self?.users = peers.compactMap(\.info?.user)
         }
         .store(in: &cancellables)
-        MultipeerManagerHelper.sharedManager.dataPublisher.sink { data in
+        MultipeerManagerHelper.sharedManager.dataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { data in
             self.receivedData = data
             self.showAlert = true
         }
         .store(in: &cancellables)
-        MultipeerManagerHelper.sharedManager.sendRecordPublisher.sink { record in
+        MultipeerManagerHelper.sharedManager.sendRecordPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { record in
             self.users = self.users.map { user in
                 if let taskUser = ExploreViewModel.taskUserMap[record.uuid] {
                     if user.id == taskUser.id {

@@ -22,11 +22,18 @@ class MultipeerReceiver {
 
 extension MultipeerReceiver {
     func receive(_ data: TraceableData, from peer: MCPeerID) {
+        LogTool.log("Received Data \(data)", level: .debug)
         dataPublisher.send(data)
         idPeerMap.updateValue(peer, forKey: data.uuid)
     }
 
     func  response(with record: DataSendRecord, to peer: MCPeerID) throws {
-        try session.send(record.dataValue, toPeers: [peer], with: .reliable)
+        do {
+            LogTool.log("Response with \(record)", level: .debug)
+            try session.send(record.dataValue, toPeers: [peer], with: .reliable)
+        } catch {
+            LogTool.log(error.localizedDescription, level: .error)
+            throw PeerError.failToResponseError
+        }
     }
 }

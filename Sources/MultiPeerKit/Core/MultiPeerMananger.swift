@@ -75,6 +75,7 @@ extension MultipeerManager {
 extension MultipeerManager: MCSessionDelegate {
     public func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         if let record = ReceiveDataProcessor.getResponse(data: data) {
+            LogTool.log("Received Response \(record)", level: .debug)
             sender.updateSendRecord(record)
             return
         }
@@ -92,7 +93,7 @@ extension MultipeerManager: MCSessionDelegate {
 
 extension MultipeerManager: MCNearbyServiceBrowserDelegate {
     public func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
-        browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
+        browser.invitePeer(peerID, to: session, withContext: nil, timeout: .infinity)
         let peer = Peer(mcPeerID: peerID, info: info)
         store.addPeer(peer)
     }
