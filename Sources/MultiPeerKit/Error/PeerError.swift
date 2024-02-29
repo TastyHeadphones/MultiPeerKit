@@ -7,4 +7,5 @@
 
 enum PeerError: Error {
     case noPeerTrackError
+    case unConnectedError
 }

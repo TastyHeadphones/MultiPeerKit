@@ -20,20 +20,25 @@ class MultipeerSender {
         self.header = header
     }
 
-    func send(data: Data, to peers: [MCPeerID]) throws -> String {
+    func send(data: Data, to peers: [MCPeerID]) -> String {
         let uuidString = UUID().uuidString
         let traceableData = TraceableData(header: header, data: data, uuid: uuidString)
-        try session.send(traceableData.dataValue, toPeers: peers, with: .reliable)
-        Task {
-            let record = DataSendRecord(uuid: uuidString, state: .pending)
+        do {
+            try session.send(traceableData.dataValue, toPeers: peers, with: .reliable)
+        } catch {
+            let record = DataSendRecord(uuid: uuidString, state: .fail)
             updateSendRecord(record)
         }
+        let record = DataSendRecord(uuid: uuidString, state: .pending)
+        updateSendRecord(record)
         return uuidString
     }
 }
 
 extension MultipeerSender {
     func updateSendRecord(_ record: DataSendRecord) {
-        recordPublisher.send(record)
+        Task {
+            recordPublisher.send(record)
+        }
     }
 }

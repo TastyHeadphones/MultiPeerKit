@@ -63,7 +63,7 @@ struct UserView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
                 Button(action: {
-                    guard let taskId = try? MultipeerManagerHelper.sharedManager.send(sendMessage.data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!]) else { return }
+                    let taskId = MultipeerManagerHelper.sharedManager.send(sendMessage.data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!])
                     ExploreViewModel.taskUserMap[taskId] = user
                     prsentTextFiled = false
                 }) {
