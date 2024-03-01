@@ -15,8 +15,8 @@ public final class PeersStore {
         peers.append(peer)
     }
 
-    func removePeer(with id: String) {
-        peers.removeAll { $0.id == id }
+    func removePeer(with mcPeerID: MCPeerID) {
+        peers.removeAll { $0.mcPeerID == mcPeerID }
     }
 
     public func peer(for id: String) -> Peer? {

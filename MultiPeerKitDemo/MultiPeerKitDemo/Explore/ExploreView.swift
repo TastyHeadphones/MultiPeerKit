@@ -122,9 +122,22 @@ struct UserView: View {
 
 struct ExploreView: View {
     @State var viewModel = ExploreViewModel()
+    @State var currentName: String = User.current.name
     var body: some View {
         VStack{
-            Text("\(User.current.name)")
+            HStack{
+                Text("\(currentName)")
+                Button(action: {
+                    User.current.name = generateRandomString(length: 5)
+                    currentName = User.current.name
+                    MultipeerManagerHelper.sharedManager.updateAdvertiser(Peer(id: User.current.id,
+                                                                               info: User.current.dictValue))
+                }) {
+                    Image(systemName: "pencil")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+            }
             List(viewModel.users) { user in
                 UserView(user: user)
             }

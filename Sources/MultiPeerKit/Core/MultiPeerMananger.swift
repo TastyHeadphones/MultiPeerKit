@@ -46,9 +46,14 @@ public final class MultipeerManager: NSObject {
 
 extension MultipeerManager {
     public func updateAdvertiser(_ peer: Peer) {
-        advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
-        advertiser.delegate = self
-        advertiser.startAdvertisingPeer()
+        advertiser.stopAdvertisingPeer()
+        Task.detached(priority: .utility) { [weak self] in
+            guard let self else { return }
+            advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
+            advertiser.delegate = self
+            try await Task.sleep(nanoseconds: UInt64(5e8)) // 500ms delay for MCNearbyServiceBrowserDelegate work
+            advertiser.startAdvertisingPeer()
+        }
     }
 
     public func beginConnection() {
@@ -107,7 +112,7 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
     }
 
     public func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        store.removePeer(with: peerID.displayName)
+        store.removePeer(with: peerID)
     }
 }
 

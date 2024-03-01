@@ -12,12 +12,12 @@ struct User: Codable, Identifiable, Hashable {
     var id: String { deviceId }
 
     let deviceId: String
-    let name: String
+    var name: String
     let activator: String
 
     var state: DataSendState?
 
-    static let current = User(deviceId: UIDevice.current.identifierForVendor!.uuidString,
+    static var current = User(deviceId: UIDevice.current.identifierForVendor!.uuidString,
                               name: generateRandomString(length: 7),
                               activator: "")
 
