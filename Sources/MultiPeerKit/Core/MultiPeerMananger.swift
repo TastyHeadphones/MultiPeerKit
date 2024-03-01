@@ -16,12 +16,14 @@ public final class MultipeerManager: NSObject {
     private let sender: MultipeerSender
     private let receiver: MultipeerReceiver
 
+    private let store = PeersStore()
+
     private let browser: MCNearbyServiceBrowser
     private var advertiser: MCNearbyServiceAdvertiser
-    public let store = PeersStore()
 
     public let dataPublisher: AnyPublisher<TraceableData, Never>
     public let sendRecordPublisher: AnyPublisher<DataSendRecord, Never>
+    public let peersPublisher: AnyPublisher<[Peer], Never>
 
     public init(peer: Peer, serviceType: String) {
         self.serviceType = serviceType
@@ -33,6 +35,7 @@ public final class MultipeerManager: NSObject {
         advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
         dataPublisher = receiver.dataPublisher.eraseToAnyPublisher()
         sendRecordPublisher = sender.recordPublisher.eraseToAnyPublisher()
+        peersPublisher = store.peersPublisher.eraseToAnyPublisher()
         super.init()
         setupDelegate()
     }
@@ -64,6 +67,10 @@ extension MultipeerManager {
     public func stopConnection() {
         browser.stopBrowsingForPeers()
         advertiser.stopAdvertisingPeer()
+    }
+
+    public func send(_ data: Data, to peers: [String]) -> String {
+        send(data, to: peers.compactMap { store.peer(for: $0) })
     }
 
     public func send(_ data: Data, to peers: [Peer]) -> String {

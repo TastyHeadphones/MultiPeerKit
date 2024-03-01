@@ -63,7 +63,7 @@ struct UserView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
                 Button(action: {
-                    let taskId = MultipeerManagerHelper.sharedManager.send(sendMessage.data(using: .utf8)!, to: [MultipeerManagerHelper.sharedManager.store.peer(for: user.id)!])
+                    let taskId = MultipeerManagerHelper.sharedManager.send(sendMessage.data(using: .utf8)!, to: [user.id])
                     ExploreViewModel.taskUserMap[taskId] = user
                     prsentTextFiled = false
                 }) {
@@ -91,7 +91,7 @@ struct UserView: View {
 
     init() {
         MultipeerManagerHelper.sharedManager.beginConnection()
-        MultipeerManagerHelper.sharedManager.store.$peers.sink { [weak self] peers in
+        MultipeerManagerHelper.sharedManager.peersPublisher.sink { [weak self] peers in
             self?.users = peers.compactMap(\.info?.user)
         }
         .store(in: &cancellables)

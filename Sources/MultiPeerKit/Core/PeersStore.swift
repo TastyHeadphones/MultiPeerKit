@@ -8,18 +8,18 @@
 import MultipeerConnectivity
 import Combine
 
-public final class PeersStore {
-    @Published public var peers: [Peer] = []
+final class PeersStore {
+    let peersPublisher = CurrentValueSubject<[Peer], Never>([])
 
     func addPeer(_ peer: Peer) {
-        peers.append(peer)
+        peersPublisher.value.append(peer)
     }
 
     func removePeer(with mcPeerID: MCPeerID) {
-        peers.removeAll { $0.mcPeerID == mcPeerID }
+        peersPublisher.value.removeAll { $0.mcPeerID == mcPeerID }
     }
 
-    public func peer(for id: String) -> Peer? {
-        return peers.first { $0.id == id }
+    func peer(for id: String) -> Peer? {
+        return peersPublisher.value.first { $0.id == id }
     }
 }
