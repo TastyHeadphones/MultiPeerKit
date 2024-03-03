@@ -12,6 +12,7 @@ final class PeersStore {
     let peersPublisher = CurrentValueSubject<[Peer], Never>([])
 
     func addPeer(_ peer: Peer) {
+        if peersPublisher.value.contains(peer) { return }
         peersPublisher.value.append(peer)
     }
 
