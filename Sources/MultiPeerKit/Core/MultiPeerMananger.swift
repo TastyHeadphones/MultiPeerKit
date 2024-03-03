@@ -48,12 +48,13 @@ public final class MultipeerManager: NSObject {
 }
 
 extension MultipeerManager {
-    public func updateAdvertiser(_ peer: Peer) {
+    public func updateAdvertiser(_ peer: Peer, isAdvertising: Bool = true) {
         advertiser.stopAdvertisingPeer()
         Task.detached(priority: .utility) { [weak self] in
             guard let self else { return }
             advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
             advertiser.delegate = self
+            guard isAdvertising else { return }
             try await Task.sleep(nanoseconds: UInt64(5e8)) // 500ms delay for MCNearbyServiceBrowserDelegate work
             advertiser.startAdvertisingPeer()
         }

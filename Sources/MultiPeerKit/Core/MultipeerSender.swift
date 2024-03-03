@@ -25,6 +25,7 @@ class MultipeerSender {
         let traceableData = TraceableData(header: header, data: data, uuid: uuidString)
         do {
             try session.send(traceableData.dataValue, toPeers: peers, with: .reliable)
+            LogTool.log("Send data \(traceableData) to \(peers)", level: .debug)
             let record = DataSendRecord(uuid: uuidString, state: .pending)
             updateSendRecord(record)
         } catch {
