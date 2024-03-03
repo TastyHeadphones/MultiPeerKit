@@ -15,6 +15,12 @@ public struct TraceableData: Sendable, Codable {
     public var dataValue: Data {
         try! JSONEncoder().encode(self)
     }
+
+    public init(header: [String: String]?, data: Data, uuid: String) {
+        self.header = header
+        self.data = data
+        self.uuid = uuid
+    }
 }
 
 public extension Data {
