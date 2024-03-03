@@ -59,6 +59,22 @@ extension MultipeerManager {
         }
     }
 
+    public func startBrowsingForPeers() {
+        browser.startBrowsingForPeers()
+    }
+
+    public func stopBrowsingForPeers() {
+        browser.stopBrowsingForPeers()
+    }
+
+    public func startAdvertisingPeer() {
+        advertiser.startAdvertisingPeer()
+    }
+
+    public func stopAdvertisingPeer() {
+        advertiser.stopAdvertisingPeer()
+    }
+
     public func beginConnection() {
         browser.startBrowsingForPeers()
         advertiser.startAdvertisingPeer()
