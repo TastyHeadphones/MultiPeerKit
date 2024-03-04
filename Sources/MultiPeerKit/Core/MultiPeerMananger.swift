@@ -55,7 +55,7 @@ extension MultipeerManager {
             advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: peer.info, serviceType: serviceType)
             advertiser.delegate = self
             guard isAdvertising else { return }
-            try await Task.sleep(nanoseconds: UInt64(5e8)) // 500ms delay for MCNearbyServiceBrowserDelegate work
+            try await Task.sleep(nanoseconds: UInt64(2e9)) // 2s delay for MCNearbyServiceBrowserDelegate work
             advertiser.startAdvertisingPeer()
         }
     }
